@@ -3,28 +3,20 @@
 #include <iostream>
 
 using namespace std;
-using namespace sf;
 
 Shell::Shell(){}
 
 Shell::Shell(int width_user, int height_user, const string& userName_user){
-    int n=3;
-    terminalWindow = new RenderWindow(VideoMode(600, 400), "SFML!");
+    terminalWindow = new sf::RenderWindow(sf::VideoMode(600, 400), "SFML!");
     shell = Display(width_user, height_user, userName_user);
     terminalClock.restart();
-
-    terminalFont = vector<Text>(n);
-    terminalText[0].setFillColor(Color::Green);
-    terminalText[1].setFillColor(Color::Blue);
-    terminalText[2].setFillColor(Color::Red);
+    terminalText.setFillColor(sf::Color::Green);
     if (!terminalFont.loadFromFile("fonts/UbuntuMono-R.ttf")){
         cout<<"No fonts !"<<endl;
     }
-    for(int i=0; i<n; ++i){
-        terminalText[i].setFont(terminalFont);
-        terminalText[i].setCharacterSize(14);
-        terminalText[i].setPosition(20,10);
-    }
+    terminalText.setFont(terminalFont);
+    terminalText.setCharacterSize(14);
+    terminalText.setPosition(20,10);
 }
 
 Shell::~Shell(){
@@ -59,12 +51,12 @@ void Shell::printResults(){
 void Shell::displayShell(){
     startShell();
     while (terminalWindow->isOpen()){
-        Event event;
+        sf::Event event;
         while (terminalWindow->pollEvent(event)){
-            if (event.type == Event::Closed)
+            if (event.type == sf::Event::Closed)
                 terminalWindow->close();
-            if (event.type == Event::TextEntered){
-                shell.receiveInput(String(event.text.unicode));
+            if (event.type == sf::Event::TextEntered){
+                shell.receiveInput(sf::String(event.text.unicode));
                 exitShell();
                 printResults();
                 terminalClock.restart();

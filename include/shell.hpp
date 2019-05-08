@@ -15,7 +15,7 @@ class Shell{
         sf::RenderWindow *terminalWindow;
         sf::Time terminalTime;
         sf::Clock terminalClock;
-        std::vector<sf::Font> terminalFont;
+        sf::Font terminalFont;
         sf::Text terminalText;
         Display shell;
 

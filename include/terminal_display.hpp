@@ -43,6 +43,7 @@ class Display : public Input{
         Display(int width_user, int height_user, const std::string& userLog_user);
         ~Display();
 
+        void printResults();
         char getFlashingCursor(float time);
         void setInstruction(const std::string& command);
         std::string getInstruction();
