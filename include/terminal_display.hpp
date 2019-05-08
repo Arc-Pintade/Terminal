@@ -31,11 +31,14 @@ class Display : public Input{
         int width;
         int height;
         std::string userLog;
+        std::string ioLog;
         std::vector<std::string> logLines;
+        std::vector<std::string> ioLines;
         constexpr static const float FLASH_INTERVAL = .5f;
 
 // virtual mother donc la fille prioritaire (override juste pour la compile 80)
         void sendCommand(const std::string& command) override;
+        std::string countReturn(const std::string& s);
 
     public :
 
@@ -47,8 +50,10 @@ class Display : public Input{
         char getFlashingCursor(float time);
         void setInstruction(const std::string& command);
         std::string getInstruction();
-        std::string getAllDisplayLines(float time);
-        std::string getDisplayBuffer(float time);
+        std::string getAllDisplayIOLines(float time);
+        std::string getDisplayIOBuffer(float time);
+        std::string getAllDisplayLogLines(float time);
+        std::string getDisplayLogBuffer(float time);
         std::string returnLine(const std::string& word);
         std::string cutViewport(const std::string& lines);
         void clear();

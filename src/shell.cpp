@@ -1,6 +1,7 @@
 #include "../include/shell.hpp"
 
 #include <iostream>
+#include <cmath>
 
 using namespace std;
 
@@ -10,13 +11,17 @@ Shell::Shell(int width_user, int height_user, const string& userName_user){
     terminalWindow = new sf::RenderWindow(sf::VideoMode(600, 400), "SFML!");
     shell = Display(width_user, height_user, userName_user);
     terminalClock.restart();
-    terminalText.setFillColor(sf::Color::Green);
+    terminalText[1].setFillColor(sf::Color::Green);
+    terminalText[0].setFillColor(sf::Color::Red);
     if (!terminalFont.loadFromFile("fonts/UbuntuMono-R.ttf")){
         cout<<"No fonts !"<<endl;
     }
-    terminalText.setFont(terminalFont);
-    terminalText.setCharacterSize(14);
-    terminalText.setPosition(20,10);
+    for(int i=0; i<2; ++i){
+        terminalText[i].setFont(terminalFont);
+        terminalText[i].setCharacterSize(14);
+        terminalText[i].setPosition(20,10);
+    }
+
 }
 
 Shell::~Shell(){
@@ -63,9 +68,15 @@ void Shell::displayShell(){
             }
         }
         terminalTime = terminalClock.getElapsedTime();
-        terminalText.setString(shell.getDisplayBuffer(terminalTime.asSeconds()));
+        terminalText[0].setString(shell.getDisplayLogBuffer(terminalTime.asSeconds()));
+        terminalText[1].setString(shell.getDisplayIOBuffer(terminalTime.asSeconds()));
         terminalWindow->clear();
-        terminalWindow->draw(terminalText);
+        //  terminalWindow->draw(terminalText[
+        //      round(terminalTime.asSeconds()-
+        //            floor(terminalTime.asSeconds()))]);
+        for(int i=0; i<2; i++){
+             terminalWindow->draw(terminalText[i]);
+         }
         terminalWindow->display();
     }
 }

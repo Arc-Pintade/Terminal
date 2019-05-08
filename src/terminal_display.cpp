@@ -47,7 +47,8 @@ void Input::receiveInput(const string& input){
 
 void Display::sendCommand(const string& command){
     setInstruction(command);
-    logLines.push_back(userLog+command);
+    logLines.push_back(userLog+countReturn(command));
+    ioLines.push_back(ioLog+command);
     currentLine = "";
 }
 
@@ -58,7 +59,9 @@ Display::Display(int width_user, int height_user, const string& userLog_user){
     width = width_user;
     height = height_user;
     userLog = userLog_user;
+    ioLog = string(userLog.size(), ' ');
     logLines = vector<string>(0);
+    ioLines = vector<string>(0);
 }
 
 Display::~Display(){
@@ -74,17 +77,33 @@ string Display::getInstruction(){
 }
 
 
-string Display::getAllDisplayLines(float time){
+string Display::getAllDisplayIOLines(float time){
     string output = "";
-    for(string line : logLines)
+    for(string line : ioLines)
         output += line + '\n';
-    output += userLog + getCurrentLine();
+    output += ioLog + getCurrentLine();
     output += getFlashingCursor(time);
     return output;
 }
 
-string Display::getDisplayBuffer(float time){
-    string lines = getAllDisplayLines(time);
+string Display::getAllDisplayLogLines(float time){
+    string output = "";
+    for(string line : logLines)
+        output += line + '\n';
+    output += userLog + countReturn(getCurrentLine());
+    //output += getFlashingCursor(time);
+    return output;
+}
+
+string Display::getDisplayIOBuffer(float time){
+    string lines = getAllDisplayIOLines(time);
+    string wrappedLines = returnLine(lines);
+    string viewportLines = cutViewport(wrappedLines);
+    return viewportLines;
+}
+
+string Display::getDisplayLogBuffer(float time){
+    string lines = getAllDisplayLogLines(time);
     string wrappedLines = returnLine(lines);
     string viewportLines = cutViewport(wrappedLines);
     return viewportLines;
@@ -135,6 +154,16 @@ void Display::clear(){
     logLines.clear();
 }
 
+string Display::countReturn(const string& s)
+{
+    string empty = "";
+    for (char c : s)
+        if (c == '\n')
+            empty += '\n';
+    return empty;
+}
+
 void Display::writeLine(const string& line){
-    logLines.push_back(line);
+    logLines.push_back(countReturn(line));
+    ioLines.push_back(line);
 }
