@@ -1,4 +1,7 @@
-#include "terminalDisplay.hpp"
+#ifndef SHELL_H
+#define SHELL_H
+
+#include "terminal_display.hpp"
 #include <SFML/Graphics.hpp>
 
 class Shell{
@@ -12,7 +15,7 @@ class Shell{
         sf::RenderWindow *terminalWindow;
         sf::Time terminalTime;
         sf::Clock terminalClock;
-        sf::Font terminalFont;
+        std::vector<sf::Font> terminalFont;
         sf::Text terminalText;
         Display shell;
 
@@ -23,7 +26,10 @@ class Shell{
         ~Shell();
 
         void displayShell();
-        void quickCheck(const std::string& command);
         void startShell();
+        void exitShell();
+        void printResults();
 
 };
+
+#endif

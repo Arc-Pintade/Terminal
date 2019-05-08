@@ -36,7 +36,6 @@ class Display : public Input{
 
 // virtual mother donc la fille prioritaire (override juste pour la compile 80)
         void sendCommand(const std::string& command) override;
-        void printResults();
 
     public :
 

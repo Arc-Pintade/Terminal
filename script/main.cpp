@@ -1,4 +1,4 @@
-#include "../include/terminalDisplay.hpp"
+#include "../include/terminal_display.hpp"
 #include "../include/shell.hpp"
 
 using namespace std;

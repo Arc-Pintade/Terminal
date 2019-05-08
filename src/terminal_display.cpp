@@ -1,4 +1,4 @@
-#include "../include/terminalDisplay.hpp"
+#include "../include/terminal_display.hpp"
 
 #include <iostream>
 #include <cmath>
@@ -73,15 +73,6 @@ string Display::getInstruction(){
     return instruction;
 }
 
-void Display::printResults(){
-    string out1 = "\n >> ";
-    string out2 = "\n";
-    if(instruction == "universal truth")
-        writeLine(out1+"greg = pute"+out2);
-    else if(instruction == "pwd")
-        writeLine(out1+"fail"+out2);
-    setInstruction("");
-}
 
 string Display::getAllDisplayLines(float time){
     string output = "";
@@ -93,7 +84,6 @@ string Display::getAllDisplayLines(float time){
 }
 
 string Display::getDisplayBuffer(float time){
-    printResults();
     string lines = getAllDisplayLines(time);
     string wrappedLines = returnLine(lines);
     string viewportLines = cutViewport(wrappedLines);
