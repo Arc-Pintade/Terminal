@@ -45,27 +45,27 @@ void Input::receiveInput(const string& input){
 
 //________________________________ Display ___________________________________//
 
-void Display::sendCommand(const string& command){
-    setInstruction(command);
-    logLines.push_back(userLog+countReturn(command));
-    ioLines.push_back(ioLog+command);
-    currentLine = "";
-}
-
 Display::Display(){}
 
 Display::Display(int width_user, int height_user, const string& userLog_user){
     instruction = "";
     width = width_user;
     height = height_user;
-    userLog = userLog_user;
-    ioLog = string(userLog.size(), ' ');
-    logLines = vector<string>(0);
-    ioLines = vector<string>(0);
+    ioInput[0] = userLog_user;
+    ioInput[1] = string(ioInput[0].size(), ' ');
+    for(int i=0; i<numberColor; ++i)
+        ioLines[i] = vector<string>(0);
 }
 
 Display::~Display(){
     cout<<"Display Destruction"<<endl;
+}
+
+void Display::sendCommand(const string& command){
+    setInstruction(command);
+    ioLines[0].push_back(ioInput[0]+countReturn(command));
+    ioLines[1].push_back(ioInput[1]+command);
+    currentLine = "";
 }
 
 void Display::setInstruction(const string& command){
@@ -76,37 +76,27 @@ string Display::getInstruction(){
     return instruction;
 }
 
-
-string Display::getAllDisplayIOLines(float time){
-    string output = "";
-    for(string line : ioLines)
-        output += line + '\n';
-    output += ioLog + getCurrentLine();
-    output += getFlashingCursor(time);
-    return output;
+array<string, numberColor> Display::getAllDisplayIOLines(float time){
+    array<string, numberColor> foo;
+    for(int i=0; i<numberColor; ++i){
+        foo[i] = "";
+        for(string line : ioLines[i])
+            foo[i] += line + '\n';
+    }
+    foo[0] += ioInput[0] + countReturn(getCurrentLine());
+    foo[1] += ioInput[1] + getCurrentLine();
+    foo[1] += getFlashingCursor(time);
+    return foo;
 }
 
-string Display::getAllDisplayLogLines(float time){
-    string output = "";
-    for(string line : logLines)
-        output += line + '\n';
-    output += userLog + countReturn(getCurrentLine());
-    //output += getFlashingCursor(time);
-    return output;
-}
-
-string Display::getDisplayIOBuffer(float time){
-    string lines = getAllDisplayIOLines(time);
-    string wrappedLines = returnLine(lines);
-    string viewportLines = cutViewport(wrappedLines);
-    return viewportLines;
-}
-
-string Display::getDisplayLogBuffer(float time){
-    string lines = getAllDisplayLogLines(time);
-    string wrappedLines = returnLine(lines);
-    string viewportLines = cutViewport(wrappedLines);
-    return viewportLines;
+array<string, numberColor> Display::getDisplayIOBuffer(float time){
+    array<string, numberColor> foo;
+    foo = getAllDisplayIOLines(time);
+    for(int i=0; i<numberColor; ++i){
+        foo[i] = returnLine(foo[i]);
+        foo[i] = cutViewport(foo[i]);
+    }
+    return foo;
 }
 
 string Display::returnLine(const string& word){
@@ -151,7 +141,8 @@ char Display::getFlashingCursor(float time){
 }
 
 void Display::clear(){
-    logLines.clear();
+    for(int i=0; i<numberColor; ++i)
+        ioLines[i].clear();
 }
 
 string Display::countReturn(const string& s)
@@ -164,6 +155,6 @@ string Display::countReturn(const string& s)
 }
 
 void Display::writeLine(const string& line){
-    logLines.push_back(countReturn(line));
-    ioLines.push_back(line);
+    ioLines[0].push_back(countReturn(line));
+    ioLines[1].push_back(line);
 }

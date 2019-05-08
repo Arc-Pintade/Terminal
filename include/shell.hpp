@@ -16,7 +16,7 @@ class Shell{
         sf::Time terminalTime;
         sf::Clock terminalClock;
         sf::Font terminalFont;
-        std::array<sf::Text, 2> terminalText;
+        std::array<sf::Text, numberColor> terminalText;
         Display shell;
 
     public :

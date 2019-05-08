@@ -11,12 +11,12 @@ Shell::Shell(int width_user, int height_user, const string& userName_user){
     terminalWindow = new sf::RenderWindow(sf::VideoMode(600, 400), "SFML!");
     shell = Display(width_user, height_user, userName_user);
     terminalClock.restart();
-    terminalText[1].setFillColor(sf::Color::Green);
-    terminalText[0].setFillColor(sf::Color::Red);
+    terminalText[1].setFillColor(sf::Color(0,255,150));
+    terminalText[0].setFillColor(sf::Color(0,255,0));
     if (!terminalFont.loadFromFile("fonts/UbuntuMono-R.ttf")){
         cout<<"No fonts !"<<endl;
     }
-    for(int i=0; i<2; ++i){
+    for(int i=0; i<numberColor; ++i){
         terminalText[i].setFont(terminalFont);
         terminalText[i].setCharacterSize(14);
         terminalText[i].setPosition(20,10);
@@ -42,18 +42,23 @@ void Shell::exitShell(){
 }
 
 void Shell::printResults(){
-    string out1 = "\n >> ";
-    string out2 = "\n";
-    if(shell.getInstruction() == "universal truth")
-        shell.writeLine(out1+"greg = pute"+out2);
+    string prefix = " ";
+    if(shell.getInstruction() == "greg")
+        shell.writeLine(prefix+"greg = pute");
     else if(shell.getInstruction() == "pwd")
-        shell.writeLine(out1+"fail"+out2);
+        shell.writeLine(prefix+"fail");
+    else if(shell.getInstruction() == "chmod +x run"){
+        shell.writeLine("#################");
+        shell.writeLine("#### You win ####");
+        shell.writeLine("#################");
+    }
     else if(shell.getInstruction() != "")
-        shell.writeLine(out1+"unknown command %% Error_XX02Y9"+out2);
+        shell.writeLine(prefix+shell.getInstruction()+" : unknown command");
     shell.setInstruction("");
 }
 
 void Shell::displayShell(){
+    array<string, numberColor> textDisplay;
     startShell();
     while (terminalWindow->isOpen()){
         sf::Event event;
@@ -68,15 +73,13 @@ void Shell::displayShell(){
             }
         }
         terminalTime = terminalClock.getElapsedTime();
-        terminalText[0].setString(shell.getDisplayLogBuffer(terminalTime.asSeconds()));
-        terminalText[1].setString(shell.getDisplayIOBuffer(terminalTime.asSeconds()));
         terminalWindow->clear();
-        //  terminalWindow->draw(terminalText[
-        //      round(terminalTime.asSeconds()-
-        //            floor(terminalTime.asSeconds()))]);
-        for(int i=0; i<2; i++){
-             terminalWindow->draw(terminalText[i]);
-         }
+        for(int i=0; i<numberColor; ++i){
+            textDisplay = shell.getDisplayIOBuffer(terminalTime.asSeconds());
+            terminalText[i].setString(textDisplay[i]);
+            terminalWindow->draw(terminalText[i]);
+        }
+
         terminalWindow->display();
     }
 }
